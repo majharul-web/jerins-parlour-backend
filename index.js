@@ -24,6 +24,7 @@ async function run() {
         const database = client.db("JerinsDB");
         const servicesCollection = database.collection("services");
         const reviewsCollection = database.collection("reviews");
+        const ordersCollection = database.collection("orders");
 
         // insert Products
         app.post('/addService', async (req, res) => {
@@ -45,10 +46,17 @@ async function run() {
             res.send(result);
         })
 
-        // read products
+        // read review
         app.get('/review', async (req, res) => {
             const review = await reviewsCollection.find({}).toArray();
             res.send(review)
+        })
+
+        // add order
+        app.post('/addOrder', async (req, res) => {
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order);
+            res.json(result);
         })
 
 
