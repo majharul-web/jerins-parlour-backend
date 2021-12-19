@@ -13,7 +13,6 @@ app.use(express.json());
 
 // database connection
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6soco.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function run() {
@@ -23,7 +22,34 @@ async function run() {
 
         // database and collection
         const database = client.db("JerinsDB");
-        const infoCollect = database.collection("info");
+        const servicesCollection = database.collection("services");
+        const reviewsCollection = database.collection("reviews");
+
+        // insert Products
+        app.post('/addService', async (req, res) => {
+            const service = req.body;
+            const result = await servicesCollection.insertOne(service);
+            res.send(result);
+        })
+
+        // read products
+        app.get('/service', async (req, res) => {
+            const result = await servicesCollection.find({}).toArray();
+            res.send(result)
+        })
+
+        // add Review
+        app.post('/addReview', async (req, res) => {
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
+            res.send(result);
+        })
+
+        // read products
+        app.get('/review', async (req, res) => {
+            const review = await reviewsCollection.find({}).toArray();
+            res.send(review)
+        })
 
 
     }
