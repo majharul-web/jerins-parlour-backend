@@ -59,6 +59,60 @@ async function run() {
             res.json(result);
         })
 
+        // read myOrders
+        app.get('/MyOrders/:email', async (req, res) => {
+            const email = req.params.email;
+            const result = await ordersCollection.find({ CustomerEmail: email }).toArray();
+            res.send(result)
+        })
+
+        //order delete from  myOrders
+        app.delete('/myOrders/order/delete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.deleteOne(query);
+            res.json(result);
+        })
+
+        // read manageOrders
+        app.get('/manageOrders', async (req, res) => {
+            const result = await ordersCollection.find({}).toArray();
+            res.send(result)
+        })
+
+        //order delete from  allOrders
+        app.delete('/allOrders/order/delete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.deleteOne(query);
+            res.json(result);
+        })
+
+        // update order status
+        app.put('/orderStatus/update/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: { status: 'Shipped' }
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc)
+            res.json(result)
+        })
+
+        // read manage products
+        app.get('/manageService', async (req, res) => {
+            const result = await servicesCollection.find({}).toArray();
+            res.send(result)
+        })
+
+        //Product delete from  all products
+        app.delete('/alService/service/delete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await servicesCollection.deleteOne(query);
+            res.json(result);
+        })
+
 
     }
 
